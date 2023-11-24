@@ -37,4 +37,42 @@ class Tienda:
                 print(producto)
         else:
             print('no hay productos')
-            
+    def consultar_producto(self,producto):
+        for prod in self.productos:
+            if prod.nombre==producto:
+                return True
+            else:
+                return None
+    def realizar_venta(self):
+        numero_factura=Tienda.numero_factura+1
+        factura=Factura(numero_factura)
+        while True:
+            self.mostrar_productos()
+            producto=input('digitar producto--->')
+            producto_ob=self.consultar_producto(producto)
+            if producto_ob!=None:
+                print(producto_ob)
+                cantidad=input('cantidad a vender--->')
+                if producto_ob.cantidad_bodega>cantidad:
+                    cantidadv=cantidad
+                elif producto_ob.cantidad_bodega>0:
+                    cantidadv=producto_ob.cantidad_bodega
+                else:
+                    print('no hay productos a la venta')
+                    continue
+                valor_venta=producto_ob.valor_unitario*cantidadv
+                print('detalle venta /n ------------')
+                print('detalles venta')
+                Tienda.dinero_en_caja=Tienda.dinero_en_caja+valor_venta
+                venta=Venta(producto_ob,cantidadv)
+                factura.ventas.append(venta)
+                factura.valor_factura+=valor_venta
+                producto_ob.cantidad_bodega-=cantidadv
+                resp=('adicionar mas productos (s/n)--->')
+                if resp=='n' or resp=='N':
+                    self.facturas.append(factura)
+                    factura.mostrar_factura_detalle()
+                    Tienda.numero_factura+=1
+                    break
+            else:
+                print('producto no valido digitelo nuevamente---')
